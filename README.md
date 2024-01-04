@@ -1,2 +1,2 @@
 # APIDotNetCore
-An API using .NET Core 6 MVC with Entity Framework, SQL Server and Automapper.
+An API to study using the current best practices of .NET Core 6 with Entity Framework, SQL Server, Identity, Automapper, JWT and TDD process.
