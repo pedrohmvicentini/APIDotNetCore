@@ -11,7 +11,9 @@ namespace Entities.Entities
 
         [NotMapped]
         public string PropertyName { get; set; } = string.Empty;
+        [NotMapped]
         public string Message { get; set; } = string.Empty;
+        [NotMapped]
         public List<Notifies> Notifications { get; set; }
 
 
