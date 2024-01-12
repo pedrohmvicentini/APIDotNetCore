@@ -2,13 +2,12 @@
 using Domain.Interfaces;
 using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/message/[controller]")]
     [ApiController]
     public class MessageController : ControllerBase
     {
@@ -36,7 +35,7 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [Produces("application/json")]
-        [HttpPost("/api/Add")]
+        [HttpPost("/api/message/Add")]
         public async Task<List<Notifies>> Add(MessageViewModel message)
         {
             message.UserId = await GetLoggedUserId();
@@ -47,7 +46,7 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [Produces("application/json")]
-        [HttpPost("/api/Update")]
+        [HttpPost("/api/message/Update")]
         public async Task<List<Notifies>> Update(MessageViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
@@ -57,7 +56,7 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [Produces("application/json")]
-        [HttpPost("/api/Delete")]
+        [HttpPost("/api/message/Delete")]
         public async Task<List<Notifies>> Delete(MessageViewModel message)
         {
             var messageMap = _IMapper.Map<Message>(message);
@@ -67,7 +66,7 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [Produces("application/json")]
-        [HttpPost("/api/GetEntityById")]
+        [HttpPost("/api/message/GetEntityById")]
         public async Task<MessageViewModel> GetEntityById(Message message)
         {
             message = await _IMessage.GetEntityById(message.Id);
@@ -77,7 +76,7 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [Produces("application/json")]
-        [HttpPost("/api/List")]
+        [HttpPost("/api/message/List")]
         public async Task<List<MessageViewModel>> List()
         {
             var messages = await _IMessage.List();
