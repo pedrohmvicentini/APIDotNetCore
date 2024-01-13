@@ -1,5 +1,4 @@
-using Entities.Entities;
-using Newtonsoft.Json;
+using System.Net;
 
 namespace TestProject
 {
@@ -22,14 +21,7 @@ namespace TestProject
 
             var result = helper.execApiPost(false, ENDPOINT, "CreateTokenIdentity", data).Result;
 
-            if (result != null)
-            {
-                var listMessage = JsonConvert.DeserializeObject<Message[]>(result).ToList();
-
-                Assert.IsTrue(listMessage.Any());
-            }
-            else
-                Assert.Fail();
+            Assert.AreEqual(result, HttpStatusCode.OK);
         }
 
         

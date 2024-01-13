@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -34,7 +35,7 @@ namespace TestProject
             }
         }
 
-        public string execApiGet(
+        public async Task<string> execApiGet(
             bool hasAuth, 
             string url,
             string method)
@@ -51,13 +52,12 @@ namespace TestProject
 
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                 }
-                var response = httpClient.GetStringAsync(url + method);
-                response.Wait();
-                return response.Result;
+                var response = await httpClient.GetStringAsync(url + method);
+                return response;
             }
         }
 
-        public async Task<string> execApiPost(
+        public async Task<HttpStatusCode> execApiPost(
             bool hasAuth, 
             string url,
             string method,
@@ -74,22 +74,15 @@ namespace TestProject
                     GetToken();
 
                     if (string.IsNullOrWhiteSpace(Token))
-                        return null;
+                        return HttpStatusCode.BadRequest;
 
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                 }
                 var response = httpClient.PostAsync(url + method, content);
                 response.Wait();
-                if (response.Result.IsSuccessStatusCode)
-                {
-                    var ret = await response.Result.Content.ReadAsStringAsync();
 
-                    return ret;
-                }
+                return response.Result.StatusCode;
             }
-
-            return null;
-
         }
     }
 }

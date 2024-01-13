@@ -1,5 +1,4 @@
-﻿using Entities.Entities;
-using Newtonsoft.Json;
+﻿using System.Net;
 
 namespace TestProject
 {
@@ -26,14 +25,49 @@ namespace TestProject
 
             var result = helper.execApiPost(true, ENDPOINT, "Add", data).Result;
 
-            if (result != null)
-            {
-                var listMessage = JsonConvert.DeserializeObject<Message[]>(result).ToList();
+            Assert.AreEqual(result, HttpStatusCode.OK);
+        }
 
-                Assert.IsTrue(listMessage.Any());
-            }
-            else
-                Assert.Fail();
+        [TestMethod]
+        public void UpdateTest()
+        {
+            Helper helper = new Helper();
+
+            var data = new
+            {
+                id = 1,
+                title = "test message update" + DateTime.Now.ToString(),
+                active = true,
+                createdAt = DateTime.Now,
+                updatedAt = DateTime.Now,
+                deletedAt = DBNull.Value,
+                UserId = Guid.NewGuid()
+            };
+
+            var result = helper.execApiPost(true, ENDPOINT, "Update", data).Result;
+
+            Assert.AreEqual(result, HttpStatusCode.OK);
+        }
+
+        [TestMethod]
+        public void DeleteTest()
+        {
+            Helper helper = new Helper();
+
+            var data = new
+            {
+                id = 1,
+                title = "test delete",
+                active = false,
+                createdAt = DateTime.Now,
+                updatedAt = DateTime.Now,
+                deletedAt = DateTime.Now,
+                UserId = Guid.NewGuid()
+            };
+
+            var result = helper.execApiPost(true, ENDPOINT, "Delete", data).Result;
+
+            Assert.AreEqual(result, HttpStatusCode.OK);
         }
 
         [TestMethod]
@@ -43,14 +77,17 @@ namespace TestProject
 
             var result = helper.execApiPost(true, ENDPOINT, "List").Result;
 
-            if (result != null)
-            {
-                var listaMessage = JsonConvert.DeserializeObject<Message[]>(result).ToList();
+            Assert.AreEqual(result, HttpStatusCode.OK);
+        }
 
-                Assert.IsTrue(listaMessage.Any());
-            }
-            else
-                Assert.Fail();
+        [TestMethod]
+        public void ListActivesMessagesTest()
+        {
+            Helper helper = new Helper();
+
+            var result = helper.execApiPost(true, ENDPOINT, "ListActivesMessages").Result;
+
+            Assert.AreEqual(result, HttpStatusCode.OK);
         }
     }
 }

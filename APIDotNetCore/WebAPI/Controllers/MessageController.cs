@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
+using Domain.Interfaces.InterfaceServices;
 using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace WebAPI.Controllers
     {
         private readonly IMapper _IMapper;
         private readonly IMessage _IMessage;
+        private readonly IServiceMessage _IServiceMessage;
 
-        public MessageController(IMapper iMapper, IMessage iMessage)
+        public MessageController(IMapper iMapper, IMessage iMessage, IServiceMessage iServiceMessage)
         {
             _IMapper = iMapper;
             _IMessage = iMessage;
+            _IServiceMessage = iServiceMessage;
         }
 
         private async Task<string> GetLoggedUserId()
@@ -40,7 +43,7 @@ namespace WebAPI.Controllers
         {
             message.UserId = await GetLoggedUserId();
             var messageMap = _IMapper.Map<Message>(message);
-            await _IMessage.Add(messageMap);
+            await _IServiceMessage.Add(messageMap);
             return messageMap.Notifications;
         }
 
@@ -49,8 +52,9 @@ namespace WebAPI.Controllers
         [HttpPost("/api/message/Update")]
         public async Task<List<Notifies>> Update(MessageViewModel message)
         {
+            message.UserId = await GetLoggedUserId();
             var messageMap = _IMapper.Map<Message>(message);
-            await _IMessage.Update(messageMap);
+            await _IServiceMessage.Update(messageMap);
             return messageMap.Notifications;
         }
 
@@ -59,8 +63,9 @@ namespace WebAPI.Controllers
         [HttpPost("/api/message/Delete")]
         public async Task<List<Notifies>> Delete(MessageViewModel message)
         {
+            message.UserId = await GetLoggedUserId();
             var messageMap = _IMapper.Map<Message>(message);
-            await _IMessage.Delete(messageMap);
+            await _IServiceMessage.Delete(messageMap);
             return messageMap.Notifications;
         }
 
@@ -80,6 +85,16 @@ namespace WebAPI.Controllers
         public async Task<List<MessageViewModel>> List()
         {
             var messages = await _IMessage.List();
+            var messageMap = _IMapper.Map<List<MessageViewModel>>(messages);
+            return messageMap;
+        }
+
+        [Authorize]
+        [Produces("application/json")]
+        [HttpPost("/api/message/ListActivesMessages")]
+        public async Task<List<MessageViewModel>> ListActivesMessages()
+        {
+            var messages = await _IServiceMessage.ListActivesMessages();
             var messageMap = _IMapper.Map<List<MessageViewModel>>(messages);
             return messageMap;
         }

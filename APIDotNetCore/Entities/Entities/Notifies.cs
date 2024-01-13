@@ -26,9 +26,9 @@ namespace Entities.Entities
                     PropertyName = propertyName 
                 });
 
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         public bool ValidateIntValue(int value, string propertyName)
@@ -41,9 +41,9 @@ namespace Entities.Entities
                     PropertyName = propertyName
                 });
 
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
     }
 }
